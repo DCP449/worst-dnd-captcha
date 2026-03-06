@@ -1,0 +1,140 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Courier New', monospace;
+  background: linear-gradient(135deg, #2c1810, #1a0f07);
+  color: #f4e4bc;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+#captcha {
+  background: rgba(0,0,0,0.9);
+  border: 3px solid #d4af37;
+  border-radius: 15px;
+  padding: 30px;
+  max-width: 600px;
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+}
+
+h1 {
+  color: #d4af37;
+  text-align: center;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+  font-size: 2em;
+}
+
+h2 {
+  color: #f4e4bc;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#timerDisplay {
+  font-family: monospace;
+  font-size: 20px;
+  color: #ffaa00;
+  text-align: center;
+  margin: 15px 0;
+  font-weight: bold;
+}
+
+.mock-message {
+  background: linear-gradient(90deg, #ff4444, #cc0000);
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  font-style: italic;
+  margin: 15px 0;
+  text-align: center;
+  animation: shake 0.8s infinite;
+  border: 2px solid #ff0000;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+.step {
+  background: rgba(244, 228, 188, 0.1);
+  padding: 25px;
+  border-radius: 12px;
+  margin: 20px 0;
+  border-left: 5px solid #d4af37;
+}
+
+.step h3 {
+  color: #d4af37;
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin: 12px 0;
+  cursor: pointer;
+}
+
+select, input[type="radio"] {
+  margin-right: 10px;
+  accent-color: #d4af37;
+}
+
+button {
+  background: linear-gradient(145deg, #4CAF50, #45a049);
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 15px 5px 0 0;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+button:hover {
+  background: linear-gradient(145deg, #45a049, #3d8b40);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.error {
+  color: #ff6b6b;
+  font-weight: bold;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+#result {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 15px;
+  min-height: 25px;
+}
+
+#result:empty {
+  min-height: 25px;
+}
+
+@media (max-width: 600px) {
+  #captcha {
+    padding: 20px;
+    margin: 10px;
+  }
+  
+  h1 {
+    font-size: 1.5em;
+  }
+}
+
