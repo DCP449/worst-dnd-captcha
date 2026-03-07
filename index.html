@@ -9,15 +9,44 @@
 <body>
   <div id="captcha">
     <h1>🗡️ World's Worst DnD CAPTCHA 🛡️</h1>
-    <h2>Prove you are an Adventurer</h2>
+    <h2>Prove thou art no construct</h2>
     
     <div id="timerDisplay">
       Time elapsed: <span id="timerSeconds">0</span>s
     </div>
     <div id="mockMessage"></div>
 
-    <!-- Step 1: Class Selection -->
-    <div class="step" id="step1">
+    <!-- SCREEN 0: Construct Check -->
+    <div class="step" id="screen0">
+      <h3>Prologue: The Watcher Speaks</h3>
+      <p>
+        "To venture forth on thy adventure, thou must first prove thou art no construct.
+        Speak plain, wanderer: art thou wrought of cog and gear, or born of flesh and folly?"
+      </p>
+      <div class="construct-buttons">
+        <button type="button" id="btnConstructYes">“Aye, I am a construct.”</button>
+        <button type="button" id="btnConstructNo">“Nay, I am no construct.”</button>
+      </div>
+      <p class="error" id="screen0Error"></p>
+    </div>
+
+    <!-- SCREEN 0B: Construct = auto fail -->
+    <div class="step" id="constructFail" style="display:none;">
+      <h3>The Verdict of the Watcher</h3>
+      <p>
+        Flames roar to life around thee as the Watcher’s eyes burn crimson.
+      </p>
+      <p class="fire-text">
+        "No construct art worthy to venture forth on this adventure."
+      </p>
+      <div class="fire-animation"></div>
+      <p>
+        Refresh the page and lie better next time, little automaton.
+      </p>
+    </div>
+
+    <!-- Step 1: Class Selection (only reachable if NOT construct) -->
+    <div class="step" id="step1" style="display:none;">
       <h3>Step 1: Choose your class</h3>
       <p>The DM says "just pick anything, it won't matter." That's a lie.</p>
       <label><input type="radio" name="class" value="barbarian"> Barbarian</label><br>
@@ -28,10 +57,13 @@
       <p class="error" id="step1Error"></p>
     </div>
 
-    <!-- Step 2: Gelatinous Cube Encounter -->
+    <!-- Step 2A: Wizard Path (Correct) -->
     <div class="step" id="step2" style="display:none;">
       <h3>Step 2: The Encounter</h3>
-      <p>A gelatinous cube blocks the corridor while the DM describes fifteen minutes of wall carvings. You get one action before "everyone roll initiative."</p>
+      <p>
+        A gelatinous cube blocks the corridor while the DM describes fifteen minutes of wall carvings.
+        You get one action before "everyone roll initiative."
+      </p>
       <p>What do you do?</p>
       <select id="actionSelect">
         <option value="">-- choose --</option>
@@ -44,11 +76,45 @@
       <p class="error" id="step2Error"></p>
     </div>
 
-    <!-- Step 3: Damage Type Puzzle -->
+    <!-- DEAD END PATH: Wrong Class Leads Here -->
+    <div class="step dead-end" id="deadEnd1" style="display:none;">
+      <h3>Step 2: Barbarian/Ranger/Artificer Path</h3>
+      <p>"Your class doesn't have the right spells," says the DM. "Try the side quest."</p>
+      <p>Find the <em>magic word</em> hidden in this description:</p>
+      <p id="deadEndRiddle">
+        "The rogue whispers 'password' but the goblin king demands tribute."
+      </p>
+      <input type="text" id="deadEndInput" placeholder="magic word">
+      <button type="button" id="deadEndNext">Continue</button>
+      <p class="error" id="deadEndError"></p>
+    </div>
+
+    <!-- More Dead End -->
+    <div class="step dead-end" id="deadEnd2" style="display:none;">
+      <h3>Step 3: The Final Chamber</h3>
+      <p>"Wrong! The goblin king was allergic to that word." Now solve this lever puzzle:</p>
+      <p>Three levers: Red, Blue, Green. Pull in birthstone order.</p>
+      <select id="deadEndLever">
+        <option value="">-- choose order --</option>
+        <option value="red">Red → Blue → Green</option>
+        <option value="blue">Blue → Red → Green</option>
+        <option value="garnet">Garnet → Blue → Green</option>
+      </select>
+      <button type="button" id="deadEndFinal">Escape Dungeon</button>
+      <p class="error" id="deadEndFinalError"></p>
+    </div>
+
+    <!-- Step 3: Damage Type Puzzle (Wizard Path Only) -->
     <div class="step" id="step3" style="display:none;">
       <h3>Step 3: Dungeon "Puzzle"</h3>
-      <p>The cube dissolves, revealing a floor of 3x3 tiles labelled with damage types: <em>Fire, Cold, Acid, Lightning, Psychic, Radiant, Necrotic, Thunder, Force.</em></p>
-      <p>A glowing inscription reads: "Only those who step on the most commonly resisted damage type shall pass." According to this DM's homebrew logic, which tile is "correct"?</p>
+      <p>
+        The cube dissolves, revealing a floor of 3x3 tiles labelled with damage types:
+        <em>Fire, Cold, Acid, Lightning, Psychic, Radiant, Necrotic, Thunder, Force.</em>
+      </p>
+      <p>
+        A glowing inscription reads: "Only those who step on the most commonly resisted damage type shall pass."
+        According to this DM's homebrew logic, which tile is "correct"?
+      </p>
       <select id="puzzleSelect">
         <option value="">-- choose --</option>
         <option value="fire">Fire</option>
@@ -66,7 +132,7 @@
       <p id="result"></p>
     </div>
 
-    <!-- Hidden field for form integration -->
+    <!-- Hidden field for integration -->
     <input type="hidden" id="captchaPassed" value="false">
   </div>
 
