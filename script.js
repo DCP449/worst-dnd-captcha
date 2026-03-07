@@ -23,25 +23,25 @@ const questions = [
 
 const answers = [
   "sleep",           // Q1 - FAIL if wrong
-  "shocking grasp",  // Q2
-  "gas spore",       // Q3
-  "light",           // Q4
-  "11",              // Q5
-  "wall of force",   // Q6
-  "quipper",         // Q7
-  "cha",             // Q8
-  "unconscious",     // Q9
-  "summon fey",      // Q10
-  "quarterstaff",    // Q11
-  "fighter",         // Q12
-  "60 feet",         // Q13
-  "guidance",        // Q14
-  "poison",          // Q15
-  "mage hand legerdemain", // Q16 (technically not, but annoying)
-  "neutral evil",    // Q17
-  "speak with plants", // Q18
-  "gibbering mouther", // Q19 (drops random objects)
-  "4"                // Q20
+  "shocking grasp",  
+  "gas spore",       
+  "light",           
+  "11",              
+  "wall of force",   
+  "quipper",         
+  "cha",             
+  "unconscious",     
+  "summon fey",      
+  "quarterstaff",    
+  "fighter",         
+  "60 feet",         
+  "guidance",        
+  "poison",          
+  "mage hand legerdemain",
+  "neutral evil",    
+  "speak with plants",
+  "gibbering mouther",
+  "4"               
 ];
 
 let currentQuestion = 0;
@@ -52,7 +52,7 @@ let timerInterval;
 
 function initGame() {
   showQuestion();
-  startTimer();
+  startTimer(); // Timer runs FOREVER - only used for final timing
 }
 
 function showQuestion() {
@@ -66,19 +66,19 @@ function showQuestion() {
 }
 
 function startTimer() {
-  timerInterval = setInterval(updateTimer, 1000);
+  // Timer runs continuously for FINAL time check only
+  timerInterval = setInterval(updateTimerDisplay, 1000);
 }
 
-function updateTimer() {
+function updateTimerDisplay() {
   const elapsed = Math.floor((Date.now() - totalTimeStart) / 1000);
   const remaining = Math.max(0, 30 - elapsed);
   
   document.getElementById('timerSeconds').textContent = remaining;
-  document.getElementById('timerDisplay').className = remaining <= 5 ? 'critical' : '';
-  
-  if (remaining <= 0) {
-    endGame();
+  if (remaining <= 5) {
+    document.getElementById('timerDisplay').className = 'critical';
   }
+  // NO ENDING GAME HERE - let them finish all questions
 }
 
 function updateProgress() {
@@ -125,27 +125,24 @@ function endGame() {
   
   const totalElapsed = Math.floor((Date.now() - totalTimeStart) / 1000);
   
-  // HIDDEN SCORING LOGIC:
-  // - First question wrong = already failed above
-  // - All 20 correct AND <30s = CONSTRUCT FAIL
-  // - All 20 correct AND >=30s = PASS
-  // - Any wrong after Q1 = FAIL (but they never know which)
+  // SCORING LOGIC:
+  // Q1 wrong = already failed
+  // Perfect 20/20 + <30s = CONSTRUCT FAIL
+  // Perfect 20/20 + >=30s = PASS
+  // Any wrong = FAIL
   
   if (score === 20 && totalElapsed < 30) {
-    // TOO FAST = CONSTRUCT
     document.getElementById('questionContainer').style.display = 'none';
     document.getElementById('constructFail').style.display = 'block';
   } else if (score === 20 && totalElapsed >= 30) {
-    // SLOW PERFECTION = HUMAN PASS
     document.getElementById('questionContainer').style.display = 'none';
     document.getElementById('successScreen').style.display = 'block';
     document.getElementById('captchaPassed').value = 'true';
   } else {
-    // ANY IMPERFECTION = FAIL (they never know score)
     document.getElementById('questionContainer').style.display = 'none';
     document.getElementById('constructFail').style.display = 'block';
   }
 }
 
-// START GAME
+// START
 initGame();
