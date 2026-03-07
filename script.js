@@ -104,17 +104,17 @@ function endGame() {
   
   const totalElapsed = Math.floor((Date.now() - totalTimeStart) / 1000);
   
-  if (score === 20 && totalElapsed < 30) {
-    document.getElementById('questionContainer').style.display = 'none';
-    document.getElementById('constructFail').style.display = 'block';
-  } else if (score === 20 && totalElapsed >= 30) {
+  // PERFECT WIN: 20/20 AND >=30s
+  if (score === 20 && totalElapsed >= 30) {
     document.getElementById('questionContainer').style.display = 'none';
     document.getElementById('successScreen').style.display = 'block';
     document.getElementById('captchaPassed').value = 'true';
   } else {
+    // EVERYTHING ELSE = FAIL (too fast perfect, imperfect, Q1 wrong already handled)
     document.getElementById('questionContainer').style.display = 'none';
     document.getElementById('constructFail').style.display = 'block';
   }
+}
 }
 
 initGame();
