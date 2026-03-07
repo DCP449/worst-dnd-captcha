@@ -1,4 +1,4 @@
-{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -48,9 +48,8 @@ h2 {
   font-weight: bold;
 }
 
-#timerSeconds.critical {
+#timerDisplay.critical {
   color: #ff4444;
-  animation: pulse 1s infinite;
 }
 
 @keyframes pulse {
