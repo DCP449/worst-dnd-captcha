@@ -1,163 +1,151 @@
-let startTime = Date.now();
-let timerInterval;
-let obstacleCount = 0;
-let isWizardPath = false;
+const questions = [
+  "What is the worst spell in D&D?",
+  "Name the spell that does 1d4 lightning damage in a line.",
+  "What creature has true seeing but is blind beyond 60 feet?",
+  "Name the only cantrip that requires concentration.",
+  "What is the DC for a standard D&D coin flip?",
+  "Name the spell that creates a wall but doesn't specify thickness.",
+  "What common D&D monster has 1 HP?",
+  "Name the ability score abbreviation for Charisma.",
+  "What is the worst D&D condition to have at a party?",
+  "Name the spell that summons a fairy but not a pixie.",
+  "What D&D weapon has the versatile property but no special text?",
+  "Name the only D&D class without a Channel Divinity feature.",
+  "What is the range of the Help action?",
+  "Name the D&D spell whose name is also a Muppet.",
+  "What creature type is a construct immune to?",
+  "Name the D&D feat that gives you a floating disc.",
+  "What is the worst D&D alignment for a librarian?",
+  "Name the spell that lets you talk to plants.",
+  "What D&D monster drops soap when killed?",
+  "What is the maximum damage of a dagger?"
+];
 
-// Timer + obstacle system
+const answers = [
+  "sleep",           // Q1 - FAIL if wrong
+  "shocking grasp",  // Q2
+  "gas spore",       // Q3
+  "light",           // Q4
+  "11",              // Q5
+  "wall of force",   // Q6
+  "quipper",         // Q7
+  "cha",             // Q8
+  "unconscious",     // Q9
+  "summon fey",      // Q10
+  "quarterstaff",    // Q11
+  "fighter",         // Q12
+  "60 feet",         // Q13
+  "guidance",        // Q14
+  "poison",          // Q15
+  "mage hand legerdemain", // Q16 (technically not, but annoying)
+  "neutral evil",    // Q17
+  "speak with plants", // Q18
+  "gibbering mouther", // Q19 (drops random objects)
+  "4"                // Q20
+];
+
+let currentQuestion = 0;
+let score = 0;
+let gameOver = false;
+let totalTimeStart = Date.now();
+let timerInterval;
+
+function initGame() {
+  showQuestion();
+  startTimer();
+}
+
+function showQuestion() {
+  document.getElementById('questionNum').textContent = `Question ${currentQuestion + 1} of 20`;
+  document.getElementById('questionText').textContent = questions[currentQuestion];
+  document.getElementById('answerInput').value = '';
+  document.getElementById('answerInput').focus();
+  document.getElementById('errorMsg').textContent = '';
+  document.getElementById('submitAnswer').disabled = false;
+  updateProgress();
+}
+
 function startTimer() {
   timerInterval = setInterval(updateTimer, 1000);
 }
 
 function updateTimer() {
-  const elapsed = Math.floor((Date.now() - startTime) / 1000);
-  document.getElementById('timerSeconds').textContent = elapsed;
-  if (elapsed >= 30) addObstacle();
-}
-
-function addObstacle() {
-  obstacleCount++;
-  const mockMsg = document.getElementById('mockMessage');
-  const obstacles = [
-    'The DM introduces a random encounter because you took too long.',
-    'Your hesitation summons 1d4 skeletons. Roll initiative.',
-    'A wild mimic appears! It was the treasure chest.',
-    `Time wasted: ${obstacleCount} obstacles added. The dungeon grows hostile.`,
-    'The gelatinous cube grows impatient and engulfs you slowly.'
-  ];
-  mockMsg.textContent = obstacles[Math.min(obstacleCount, obstacles.length - 1)];
-  mockMsg.className = 'mock-message obstacle-' + obstacleCount;
-  // No hint that this is tied to time – pure hidden punishment.
-}
-
-function clearTimer() {
-  if (timerInterval) clearInterval(timerInterval);
-  document.getElementById('mockMessage').textContent = '';
-  document.getElementById('mockMessage').className = '';
-}
-
-// -------- SCREEN 0: Construct check --------
-const btnConstructYes = document.getElementById('btnConstructYes');
-const btnConstructNo = document.getElementById('btnConstructNo');
-
-btnConstructYes.addEventListener('click', () => {
-  clearTimer();
-  document.getElementById('screen0').style.display = 'none';
-  document.getElementById('constructFail').style.display = 'block';
-  // Stop here – they’re a "construct", so no adventure for them.
-});
-
-btnConstructNo.addEventListener('click', () => {
-  clearTimer();
-  startTime = Date.now();
-  document.getElementById('screen0').style.display = 'none';
-  document.getElementById('step1').style.display = 'block';
-  startTimer();
-});
-
-// -------- Step 1: Class selection (branches) --------
-document.getElementById('step1Next').addEventListener('click', () => {
-  const chosen = document.querySelector('input[name="class"]:checked');
-  const error = document.getElementById('step1Error');
+  const elapsed = Math.floor((Date.now() - totalTimeStart) / 1000);
+  const remaining = Math.max(0, 30 - elapsed);
   
-  if (!chosen) {
-    error.textContent = 'You must pick a class. This is session zero all over again.';
+  document.getElementById('timerSeconds').textContent = remaining;
+  document.getElementById('timerDisplay').className = remaining <= 5 ? 'critical' : '';
+  
+  if (remaining <= 0) {
+    endGame();
+  }
+}
+
+function updateProgress() {
+  const progress = ((currentQuestion) / 20) * 100;
+  document.getElementById('progressFill').style.width = progress + '%';
+}
+
+document.getElementById('submitAnswer').addEventListener('click', () => {
+  const userAnswer = document.getElementById('answerInput').value.toLowerCase().trim();
+  const errorMsg = document.getElementById('errorMsg');
+  
+  // FIRST QUESTION CHECK - IMMEDIATE FAIL
+  if (currentQuestion === 0 && userAnswer !== answers[0]) {
+    gameOver = true;
+    clearInterval(timerInterval);
+    document.getElementById('questionContainer').style.display = 'none';
+    document.getElementById('firstFail').style.display = 'block';
     return;
   }
   
-  if (chosen.value === 'wizard') {
-    isWizardPath = true;
-    error.textContent = '';
-    clearTimer();
-    startTime = Date.now();
-    document.getElementById('step1').style.display = 'none';
-    document.getElementById('step2').style.display = 'block';
-    startTimer();
+  // ALL OTHER QUESTIONS - SILENT SCORING
+  if (userAnswer === answers[currentQuestion]) {
+    score++;
+  }
+  
+  currentQuestion++;
+  
+  if (currentQuestion >= 20) {
+    endGame();
   } else {
-    isWizardPath = false;
-    error.textContent = '';
-    clearTimer();
-    startTime = Date.now();
-    document.getElementById('step1').style.display = 'none';
-    document.getElementById('deadEnd1').style.display = 'block';
-    startTimer();
+    showQuestion();
   }
 });
 
-// DEAD END 1: fake magic word
-document.getElementById('deadEndNext').addEventListener('click', () => {
-  const input = document.getElementById('deadEndInput').value.toLowerCase().trim();
-  const error = document.getElementById('deadEndError');
+document.getElementById('answerInput').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    document.getElementById('submitAnswer').click();
+  }
+});
+
+function endGame() {
+  gameOver = true;
+  clearInterval(timerInterval);
   
-  if (input !== 'goblin') {
-    error.textContent = '"Wrong magic word!" the goblin laughs. "Try the lever puzzle instead."';
-    return;
-  }
+  const totalElapsed = Math.floor((Date.now() - totalTimeStart) / 1000);
   
-  error.textContent = '';
-  clearTimer();
-  startTime = Date.now();
-  document.getElementById('deadEnd1').style.display = 'none';
-  document.getElementById('deadEnd2').style.display = 'block';
-  startTimer();
-});
-
-// DEAD END 2: final no-exit
-document.getElementById('deadEndFinal').addEventListener('click', () => {
-  const error = document.getElementById('deadEndFinalError');
-  error.textContent = '"The dungeon collapses!" the DM cackles. "Dead end. Refresh to try again." You are trapped forever.';
-  document.getElementById('deadEndFinal').style.display = 'none';
-  document.getElementById('deadEndLever').disabled = true;
-});
-
-// Step 2: Cube (wizard path)
-document.getElementById('step2Next').addEventListener('click', () => {
-  const action = document.getElementById('actionSelect').value;
-  const error = document.getElementById('step2Error');
+  // HIDDEN SCORING LOGIC:
+  // - First question wrong = already failed above
+  // - All 20 correct AND <30s = CONSTRUCT FAIL
+  // - All 20 correct AND >=30s = PASS
+  // - Any wrong after Q1 = FAIL (but they never know which)
   
-  if (!action) {
-    error.textContent = 'Doing nothing is still an action, but not here.';
-    return;
+  if (score === 20 && totalElapsed < 30) {
+    // TOO FAST = CONSTRUCT
+    document.getElementById('questionContainer').style.display = 'none';
+    document.getElementById('constructFail').style.display = 'block';
+  } else if (score === 20 && totalElapsed >= 30) {
+    // SLOW PERFECTION = HUMAN PASS
+    document.getElementById('questionContainer').style.display = 'none';
+    document.getElementById('successScreen').style.display = 'block';
+    document.getElementById('captchaPassed').value = 'true';
+  } else {
+    // ANY IMPERFECTION = FAIL (they never know score)
+    document.getElementById('questionContainer').style.display = 'none';
+    document.getElementById('constructFail').style.display = 'block';
   }
-  if (action !== 'retreat') {
-    error.textContent = 'That was… a choice. The DM smiles ominously. Try a different action.';
-    return;
-  }
-  
-  error.textContent = '';
-  clearTimer();
-  startTime = Date.now();
-  document.getElementById('step2').style.display = 'none';
-  document.getElementById('step3').style.display = 'block';
-  startTimer();
-});
+}
 
-// Step 3: Final puzzle (only Fire works)
-document.getElementById('verifyBtn').addEventListener('click', () => {
-  const pick = document.getElementById('puzzleSelect').value;
-  const error = document.getElementById('step3Error');
-  const result = document.getElementById('result');
-
-  if (!pick) {
-    error.textContent = 'You hover indecisively over the tiles. The DM sighs loudly.';
-    result.textContent = '';
-    return;
-  }
-
-  if (pick !== 'fire') {
-    error.textContent = '';
-    result.textContent = '❌ Incorrect. In this DM\'s world, obviously everyone resists Fire.';
-    result.style.color = '#ff6b6b';
-    document.getElementById('captchaPassed').value = 'false';
-    return;
-  }
-
-  clearTimer();
-  error.textContent = '';
-  result.textContent = '✅ You survive the encounter. The gods (and the form) grudgingly accept you as human.';
-  result.style.color = '#4CAF50';
-  document.getElementById('captchaPassed').value = 'true';
-});
-
-// Start on construct screen with timer
-startTime = Date.now();
-startTimer();
+// START GAME
+initGame();
