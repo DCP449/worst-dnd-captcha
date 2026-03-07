@@ -22,26 +22,10 @@ const questions = [
 ];
 
 const answers = [
-  "sleep",           // Q1 - FAIL if wrong
-  "shocking grasp",  
-  "gas spore",       
-  "light",           
-  "11",              
-  "wall of force",   
-  "quipper",         
-  "cha",             
-  "unconscious",     
-  "summon fey",      
-  "quarterstaff",    
-  "fighter",         
-  "60 feet",         
-  "guidance",        
-  "poison",          
-  "mage hand legerdemain",
-  "neutral evil",    
-  "speak with plants",
-  "gibbering mouther",
-  "4"               
+  "sleep", "shocking grasp", "gas spore", "light", "11", "wall of force", 
+  "quipper", "cha", "unconscious", "summon fey", "quarterstaff", "fighter",
+  "60 feet", "guidance", "poison", "mage hand legerdemain", "neutral evil",
+  "speak with plants", "gibbering mouther", "4"
 ];
 
 let currentQuestion = 0;
@@ -52,7 +36,7 @@ let timerInterval;
 
 function initGame() {
   showQuestion();
-  startTimer(); // Timer runs FOREVER - only used for final timing
+  startTimer();
 }
 
 function showQuestion() {
@@ -66,19 +50,16 @@ function showQuestion() {
 }
 
 function startTimer() {
-  // Timer runs continuously for FINAL time check only
-  timerInterval = setInterval(updateTimerDisplay, 1000);
+  timerInterval = setInterval(updateElapsedTimer, 1000);
 }
 
-function updateTimerDisplay() {
+function updateElapsedTimer() {
   const elapsed = Math.floor((Date.now() - totalTimeStart) / 1000);
-  const remaining = Math.max(0, 30 - elapsed);
+  document.getElementById('timerSeconds').textContent = elapsed;
   
-  document.getElementById('timerSeconds').textContent = remaining;
-  if (remaining <= 5) {
+  if (elapsed >= 25) {
     document.getElementById('timerDisplay').className = 'critical';
   }
-  // NO ENDING GAME HERE - let them finish all questions
 }
 
 function updateProgress() {
@@ -90,7 +71,6 @@ document.getElementById('submitAnswer').addEventListener('click', () => {
   const userAnswer = document.getElementById('answerInput').value.toLowerCase().trim();
   const errorMsg = document.getElementById('errorMsg');
   
-  // FIRST QUESTION CHECK - IMMEDIATE FAIL
   if (currentQuestion === 0 && userAnswer !== answers[0]) {
     gameOver = true;
     clearInterval(timerInterval);
@@ -99,7 +79,6 @@ document.getElementById('submitAnswer').addEventListener('click', () => {
     return;
   }
   
-  // ALL OTHER QUESTIONS - SILENT SCORING
   if (userAnswer === answers[currentQuestion]) {
     score++;
   }
@@ -125,12 +104,6 @@ function endGame() {
   
   const totalElapsed = Math.floor((Date.now() - totalTimeStart) / 1000);
   
-  // SCORING LOGIC:
-  // Q1 wrong = already failed
-  // Perfect 20/20 + <30s = CONSTRUCT FAIL
-  // Perfect 20/20 + >=30s = PASS
-  // Any wrong = FAIL
-  
   if (score === 20 && totalElapsed < 30) {
     document.getElementById('questionContainer').style.display = 'none';
     document.getElementById('constructFail').style.display = 'block';
@@ -144,5 +117,4 @@ function endGame() {
   }
 }
 
-// START
 initGame();
