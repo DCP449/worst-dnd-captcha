@@ -1,31 +1,31 @@
 const questions = [
   "What is the worst spell in D&D?",
-  "Name the spell that does 1d4 lightning damage in a line.",
-  "What creature has true seeing but is blind beyond 60 feet?",
-  "Name the only cantrip that requires concentration.",
-  "What is the DC for a standard D&D coin flip?",
-  "Name the spell that creates a wall but doesn't specify thickness.",
-  "What common D&D monster has 1 HP?",
-  "Name the ability score abbreviation for Charisma.",
-  "What is the worst D&D condition to have at a party?",
-  "Name the spell that summons a fairy but not a pixie.",
-  "What D&D weapon has the versatile property but no special text?",
-  "Name the only D&D class without a Channel Divinity feature.",
-  "What is the range of the Help action?",
-  "Name the D&D spell whose name is also a Muppet.",
-  "What creature type is a construct immune to?",
-  "Name the D&D feat that gives you a floating disc.",
-  "What is the worst D&D alignment for a librarian?",
-  "Name the spell that lets you talk to plants.",
-  "What D&D monster drops soap when killed?",
-  "What is the maximum damage of a dagger?"
+  "Which chromatic dragon’s breath weapon deals lightning damage in a line?",
+  "Which metallic dragon’s breath weapon can inflict radiant damage?",
+  "What is the creature type of a tarrasque?",
+  "What is the creature type of a roper?",
+  "What is the creature type of a flameskull?",
+  "What is the creature type of a dryad?",
+  "What is the creature type of a marilith?",
+  "What is the creature type of a pit fiend?",
+  "What is the creature type of an invisible stalker?",
+  "What is the creature type of a shield guardian?",
+  "What is the creature type shared by ghosts, liches, and mummy lords?",
+  "What is the rules term for a monster that is neither a beast, humanoid, nor undead, such as an owlbear?",
+  "What damage type does magic missile deal?",
+  "What damage type does disintegrate deal on a failed save?",
+  "What damage type does hellish rebuke deal?",
+  "What single word names the unique fiend who rules Barovia?",
+  "What is the broad creature type for demons, devils, and yugoloths?",
+  "What is the broad creature type for angels such as planetars and solars?",
+  "What broad creature type includes beholders and mind flayers??"
 ];
 
 const answers = [
-  "sleep", "shocking grasp", "gas spore", "light", "11", "wall of force", 
-  "quipper", "cha", "unconscious", "summon fey", "quarterstaff", "fighter",
-  "60 feet", "guidance", "poison", "mage hand legerdemain", "neutral evil",
-  "speak with plants", "gibbering mouther", "4"
+  "sleep", "blue", "gold", "monstrosity", "monstrosity", "undead",
+  "fey", "fiend", "fiend", "elemental", "construct",
+  "undead", "monstrosity", "force", "force", "fire",
+  "strahd", "fiend", "celestial", "aberration"
 ];
 
 let currentQuestion = 0;
