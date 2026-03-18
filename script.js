@@ -63,7 +63,7 @@ function updateElapsedTimer() {
 }
 
 function updateProgress() {
-  const progress = ((currentQuestion) / 20) * 100;
+  const progress = ((currentQuestion + 1) / 20) * 100;
   document.getElementById('progressFill').style.width = progress + '%';
 }
 
@@ -115,6 +115,6 @@ function endGame() {
     document.getElementById('constructFail').style.display = 'block';
   }
 }
-}
+
 
 initGame();
