@@ -33,7 +33,7 @@ let score = 0;
 let gameOver = false;
 let totalTimeStart = Date.now();
 let timerInterval;
-let lastElapsed = 0; // single source of truth for elapsed seconds
+let lastElapsed = 0; 
 
 function initGame() {
   showQuestion();
@@ -74,8 +74,7 @@ document.getElementById('submitAnswer').addEventListener('click', () => {
 
   const userAnswer = document.getElementById('answerInput').value.toLowerCase().trim();
 
-  // No special first-question fail anymore:
-  // just track score, move on, and decide at the end.
+
   if (userAnswer === answers[currentQuestion]) {
     score++;
   }
@@ -101,13 +100,11 @@ function endGame() {
 
   const totalElapsed = lastElapsed;
 
-  // PERFECT WIN: 20/20 AND >=60s
   if (score === 20 && totalElapsed >= 60) {
     document.getElementById('questionContainer').style.display = 'none';
     document.getElementById('successScreen').style.display = 'block';
     document.getElementById('captchaPassed').value = 'true';
   } else {
-    // Any wrong answer or too fast => fail shown *after* all questions
     document.getElementById('questionContainer').style.display = 'none';
     document.getElementById('constructFail').style.display = 'block';
   }
