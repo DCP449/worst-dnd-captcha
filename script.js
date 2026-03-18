@@ -105,7 +105,7 @@ function endGame() {
   const totalElapsed = Math.floor((Date.now() - totalTimeStart) / 1000);
   
   // PERFECT WIN: 20/20 AND >=30s
-  if (score === 20 && totalElapsed >= 30) {
+  if (score === 20 && totalElapsed >= 60) {
     document.getElementById('questionContainer').style.display = 'none';
     document.getElementById('successScreen').style.display = 'block';
     document.getElementById('captchaPassed').value = 'true';
