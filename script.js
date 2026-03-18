@@ -33,6 +33,7 @@ let score = 0;
 let gameOver = false;
 let totalTimeStart = Date.now();
 let timerInterval;
+let lastElapsed = 0; // single source of truth for elapsed seconds
 
 function initGame() {
   showQuestion();
@@ -50,14 +51,15 @@ function showQuestion() {
 }
 
 function startTimer() {
+  totalTimeStart = Date.now(); // ensure start time is set at game start
   timerInterval = setInterval(updateElapsedTimer, 1000);
 }
 
 function updateElapsedTimer() {
-  const elapsed = Math.floor((Date.now() - totalTimeStart) / 1000);
-  document.getElementById('timerSeconds').textContent = elapsed;
-  
-  if (elapsed >= 25) {
+  lastElapsed = Math.floor((Date.now() - totalTimeStart) / 1000);
+  document.getElementById('timerSeconds').textContent = lastElapsed;
+
+  if (lastElapsed >= 25) {
     document.getElementById('timerDisplay').className = 'critical';
   }
 }
@@ -68,9 +70,11 @@ function updateProgress() {
 }
 
 document.getElementById('submitAnswer').addEventListener('click', () => {
+  if (gameOver) return;
+
   const userAnswer = document.getElementById('answerInput').value.toLowerCase().trim();
   const errorMsg = document.getElementById('errorMsg');
-  
+
   if (currentQuestion === 0 && userAnswer !== answers[0]) {
     gameOver = true;
     clearInterval(timerInterval);
@@ -78,13 +82,13 @@ document.getElementById('submitAnswer').addEventListener('click', () => {
     document.getElementById('firstFail').style.display = 'block';
     return;
   }
-  
+
   if (userAnswer === answers[currentQuestion]) {
     score++;
   }
-  
+
   currentQuestion++;
-  
+
   if (currentQuestion >= 20) {
     endGame();
   } else {
@@ -101,10 +105,10 @@ document.getElementById('answerInput').addEventListener('keypress', (e) => {
 function endGame() {
   gameOver = true;
   clearInterval(timerInterval);
-  
-  const totalElapsed = Math.floor((Date.now() - totalTimeStart) / 1000);
-  
-  // PERFECT WIN: 20/20 AND >=30s
+
+  const totalElapsed = lastElapsed; // use the same value the UI shows
+
+  // PERFECT WIN: 20/20 AND >=60s
   if (score === 20 && totalElapsed >= 60) {
     document.getElementById('questionContainer').style.display = 'none';
     document.getElementById('successScreen').style.display = 'block';
@@ -115,6 +119,5 @@ function endGame() {
     document.getElementById('constructFail').style.display = 'block';
   }
 }
-
 
 initGame();
