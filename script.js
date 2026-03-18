@@ -51,7 +51,7 @@ function showQuestion() {
 }
 
 function startTimer() {
-  totalTimeStart = Date.now(); // ensure start time is set at game start
+  totalTimeStart = Date.now();
   timerInterval = setInterval(updateElapsedTimer, 1000);
 }
 
@@ -73,16 +73,9 @@ document.getElementById('submitAnswer').addEventListener('click', () => {
   if (gameOver) return;
 
   const userAnswer = document.getElementById('answerInput').value.toLowerCase().trim();
-  const errorMsg = document.getElementById('errorMsg');
 
-  if (currentQuestion === 0 && userAnswer !== answers[0]) {
-    gameOver = true;
-    clearInterval(timerInterval);
-    document.getElementById('questionContainer').style.display = 'none';
-    document.getElementById('firstFail').style.display = 'block';
-    return;
-  }
-
+  // No special first-question fail anymore:
+  // just track score, move on, and decide at the end.
   if (userAnswer === answers[currentQuestion]) {
     score++;
   }
@@ -106,7 +99,7 @@ function endGame() {
   gameOver = true;
   clearInterval(timerInterval);
 
-  const totalElapsed = lastElapsed; // use the same value the UI shows
+  const totalElapsed = lastElapsed;
 
   // PERFECT WIN: 20/20 AND >=60s
   if (score === 20 && totalElapsed >= 60) {
@@ -114,7 +107,7 @@ function endGame() {
     document.getElementById('successScreen').style.display = 'block';
     document.getElementById('captchaPassed').value = 'true';
   } else {
-    // EVERYTHING ELSE = FAIL (too fast perfect, imperfect, Q1 wrong already handled)
+    // Any wrong answer or too fast => fail shown *after* all questions
     document.getElementById('questionContainer').style.display = 'none';
     document.getElementById('constructFail').style.display = 'block';
   }
