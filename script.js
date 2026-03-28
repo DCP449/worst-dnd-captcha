@@ -109,5 +109,4 @@ function endGame() {
     document.getElementById('constructFail').style.display = 'block';
   }
 }
-
 initGame();
